@@ -2,7 +2,7 @@ import contextlib
 from fastapi import Depends, FastAPI
 from contextlib import asynccontextmanager
 from playwright.async_api import async_playwright
-
+from fastapi.middleware.cors import CORSMiddleware
 from .sse import sse_endpoint
 from .scraper import scraper_task
 from .database import get_db, engine, Base
@@ -30,6 +30,14 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # or ["*"] for dev, to allow all
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
