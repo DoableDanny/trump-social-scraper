@@ -15,7 +15,7 @@ def format_truth(truth):
         "content": truth.content,
         "timestamp": truth.timestamp.isoformat(),
         "url": truth.url,
-        "media_url": truth.media_url,
+        "media_attachments": truth.media_attachments,
     }
 
 

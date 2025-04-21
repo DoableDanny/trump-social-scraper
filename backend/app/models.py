@@ -1,4 +1,5 @@
 from sqlalchemy import BigInteger, Column, Integer, String, DateTime
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.sql import func
 from .database import Base
 
@@ -10,4 +11,4 @@ class Truth(Base):
     content = Column(String, nullable=False)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
     url = Column(String, unique=True, nullable=False)
-    media_url = Column(String, nullable=True)
+    media_attachments = Column(JSONB, nullable=True)

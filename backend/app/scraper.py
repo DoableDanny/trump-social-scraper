@@ -59,11 +59,7 @@ async def fetch_new_truths(since_id: Optional[int] = None):
                             created_at.replace("Z", "+00:00")
                         ),
                         "url": item["url"],
-                        "media_url": (
-                            item["media_attachments"][0]["url"]
-                            if item["media_attachments"]
-                            else None
-                        ),
+                        "media_attachments": item["media_attachments"],
                     }
                 )
 
