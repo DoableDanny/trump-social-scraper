@@ -1,20 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
 import { useState } from "react";
+import { useTruths } from "../../custom-hooks/useTruths";
 
-type Truth = {
+export type Truth = {
   id: number;
   content: string;
   external_id: number;
   timestamp: string;
   url: string;
   media_attachments: any[];
-};
-
-const fetchTruths = async (): Promise<Truth[]> => {
-  const res = await fetch("http://localhost:8000/truths");
-  if (!res.ok) throw new Error("Failed to fetch truths");
-  return res.json();
 };
 
 const formatTime = (isoString: string) => {
@@ -36,10 +30,7 @@ const formatDate = (isoString: string) => {
 };
 
 export const TruthsComponent = () => {
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["truths"],
-    queryFn: fetchTruths,
-  });
+  const { data, loading, error } = useTruths();
 
   const [expanded, setExpanded] = useState<{ [id: number]: boolean }>({});
 
@@ -47,10 +38,12 @@ export const TruthsComponent = () => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
   if (error instanceof Error) return <div>Error: {error.message}</div>;
 
   let lastDate: string | null = null;
+
+  console.log(data);
 
   return (
     <ul style={{ listStyle: "none", padding: 0 }}>
@@ -67,7 +60,7 @@ export const TruthsComponent = () => {
         lastDate = currentDate;
 
         return (
-          <div key={truth.id}>
+          <div key={truth.external_id}>
             {showDateHeader && (
               <li style={{ fontWeight: "bold", marginTop: 30 }}>
                 {currentDate}
