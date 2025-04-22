@@ -85,7 +85,7 @@ async def scraper_task(db: AsyncSession):
         new_truths = await fetch_new_truths(since_id=since_id)
         print("New truths:")
         print(new_truths)
-        for truth in new_truths:
+        for truth in reversed(new_truths):
             try:
                 await create_truth(db, truth)
                 await push_event(truth)
