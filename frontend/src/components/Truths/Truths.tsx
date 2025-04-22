@@ -1,124 +1,63 @@
-import DOMPurify from "dompurify";
-import { useState } from "react";
 import { useTruths } from "../../custom-hooks/useTruths";
+import { formatDate } from "./utils";
+import { Truth } from "./Truth";
 
-export type Truth = {
-  id: number;
-  content: string;
-  external_id: number;
-  timestamp: string;
-  url: string;
-  media_attachments: any[];
-};
-
-const formatTime = (isoString: string) => {
-  const date = new Date(isoString);
-  return date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-};
-
-const formatDate = (isoString: string) => {
-  const date = new Date(isoString);
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-};
-
-export const TruthsComponent = () => {
+export const Truths = () => {
   const { data, loading, error } = useTruths();
-
-  const [expanded, setExpanded] = useState<{ [id: number]: boolean }>({});
-
-  const toggleExpand = (id: number) => {
-    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
+  let lastDate: string | null = null;
 
   if (loading) return <div>Loading...</div>;
   if (error instanceof Error) return <div>Error: {error.message}</div>;
 
-  let lastDate: string | null = null;
-
-  console.log(data);
-
   return (
-    <ul style={{ listStyle: "none", padding: 0 }}>
-      {data?.map((truth) => {
-        const isExpanded = expanded[truth.id];
-        const cleanHTML = DOMPurify.sanitize(truth.content);
-        const textOnly = cleanHTML.replace(/<[^>]+>/g, "").trim();
-        const needsTruncate = textOnly.length > 128;
-        const truncatedText = textOnly.slice(0, 128);
-        const hasNoContent = textOnly.length === 0;
-        const currentDate = formatDate(truth.timestamp);
+    <div
+      style={{
+        backgroundColor: "rgb(8,11,17)",
+        display: "flex",
+        justifyContent: "center",
+        padding: 10,
+      }}
+    >
+      <ul
+        style={{
+          listStyle: "none",
+          padding: 0,
+          maxWidth: 1000,
+        }}
+      >
+        {data?.map((truth) => {
+          const currentDate = formatDate(truth.timestamp);
+          const showDateHeader = currentDate !== lastDate;
+          lastDate = currentDate;
 
-        const showDateHeader = currentDate !== lastDate;
-        lastDate = currentDate;
-
-        return (
-          <div key={truth.external_id}>
-            {showDateHeader && (
-              <li style={{ fontWeight: "bold", marginTop: 30 }}>
-                {currentDate}
-              </li>
-            )}
-            <li
-              style={{
-                border: "1px solid gray",
-                marginBottom: 20,
-                padding: 10,
-                borderRadius: 8,
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "start" }}>
-                <div style={{ marginRight: 20, whiteSpace: "nowrap" }}>
-                  {formatTime(truth.timestamp)}
-                </div>
-                <div>
-                  {hasNoContent ? (
-                    <div style={{ fontStyle: "italic", color: "#777" }}>
-                      No content provided
-                    </div>
-                  ) : isExpanded || !needsTruncate ? (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: cleanHTML,
-                      }}
-                    />
-                  ) : (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(truncatedText + "..."),
-                      }}
-                    />
-                  )}
-                </div>
-              </div>
-              {!hasNoContent && needsTruncate && (
-                <button
-                  onClick={() => toggleExpand(truth.id)}
+          return (
+            <div key={truth.external_id}>
+              {showDateHeader && (
+                <div
                   style={{
-                    marginTop: 4,
-                    cursor: "pointer",
-                    background: "none",
-                    border: "none",
-                    color: "blue",
-                    padding: 0,
+                    fontWeight: "bold",
+                    marginTop: 30,
+                    color: "rgb(115, 134, 170)",
+                    marginBottom: 10,
                   }}
                 >
-                  {isExpanded ? "▲" : "▼"}
-                </button>
+                  {currentDate}
+                </div>
               )}
-            </li>
-          </div>
-        );
-      })}
-    </ul>
+              <div
+                style={{
+                  borderTop: showDateHeader ? "1px solid gray" : "none",
+                  borderLeft: "1px solid gray",
+                  borderRight: "1px solid gray",
+                  borderBottom: "1px solid gray",
+                }}
+              >
+                <Truth truth={truth} />
+              </div>
+            </div>
+          );
+        })}
+      </ul>
+    </div>
   );
 };
