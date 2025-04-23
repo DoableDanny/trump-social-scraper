@@ -11,6 +11,9 @@ from .database import get_db, engine, Base
 from .crud import get_latest_external_id, get_latest_truths
 import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 @asynccontextmanager
