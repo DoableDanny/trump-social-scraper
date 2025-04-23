@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 from .models import Truth, TruthSummary
 from sqlalchemy import select, desc
+from sqlalchemy.orm import selectinload
 
 
 def format_truth(truth):
@@ -21,9 +22,17 @@ def format_truth(truth):
 
 async def get_latest_truths(db: AsyncSession, limit: int = 20):
     result = await db.execute(
-        select(Truth).order_by(Truth.timestamp.desc()).limit(limit)
+        select(Truth)
+        .options(selectinload(Truth.summary))  # include related summary
+        .order_by(Truth.timestamp.desc())
+        .limit(limit)
     )
-    return [format_truth(t) for t in result.scalars().all()]
+    truths = result.scalars().all()
+
+    return [
+        {**format_truth(t), "ai_summary": t.summary.summary if t.summary else ""}
+        for t in truths
+    ]
 
 
 async def get_latest_external_id(db: AsyncSession) -> Optional[int]:

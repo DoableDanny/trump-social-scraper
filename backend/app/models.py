@@ -15,6 +15,8 @@ class Truth(Base):
     url = Column(String, unique=True, nullable=False)
     media_attachments = Column(JSONB, nullable=True)
 
+    summary = relationship("TruthSummary", uselist=False, back_populates="truth")
+
 
 class TruthSummary(Base):
     __tablename__ = "truth_summaries"
@@ -24,4 +26,4 @@ class TruthSummary(Base):
     )
     summary = Column(Text, nullable=False)
 
-    truth = relationship("Truth", backref="summary")
+    truth = relationship("Truth", back_populates="summary")
