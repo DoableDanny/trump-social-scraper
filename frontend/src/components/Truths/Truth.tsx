@@ -10,6 +10,7 @@ export type Truth = {
   timestamp: string;
   url: string;
   media_attachments: any[];
+  ai_summary: string;
 };
 
 interface Props {
@@ -42,17 +43,24 @@ export const Truth = ({ truth }: Props) => {
         >
           {formatTime(truth.timestamp)}
         </div>
-        <div className={styles.content}>
-          {hasNoContent ? (
-            <div>No content provided</div>
-          ) : expanded || !needsTruncate ? (
-            <div dangerouslySetInnerHTML={{ __html: cleanHTML }} />
-          ) : (
-            <div
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(truncatedText + "..."),
-              }}
-            />
+        <div>
+          <div className={styles.content}>
+            {hasNoContent ? (
+              <div>No content provided</div>
+            ) : expanded || !needsTruncate ? (
+              <div dangerouslySetInnerHTML={{ __html: cleanHTML }} />
+            ) : (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(truncatedText + "..."),
+                }}
+              />
+            )}
+          </div>
+          {truth.ai_summary !== "" && (
+            <div style={{ marginTop: 10, color: "gray" }}>
+              AI summary: {DOMPurify.sanitize(truth.ai_summary)}
+            </div>
           )}
         </div>
       </div>
