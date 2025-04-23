@@ -2,7 +2,7 @@ from typing import Optional
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
-from .models import Truth
+from .models import Truth, TruthSummary
 from sqlalchemy import select, desc
 
 
@@ -44,4 +44,17 @@ async def create_truth(db: AsyncSession, data):
     except IntegrityError as e:
         await db.rollback()
         print("Skipping duplicate or failed truth:", e)
+        return None
+
+
+async def create_summary(db: AsyncSession, truth_id: int, summary_text: str):
+    try:
+        summary = TruthSummary(truth_id=truth_id, summary=summary_text)
+        db.add(summary)
+        await db.commit()
+        await db.refresh(summary)
+        return summary
+    except Exception as e:
+        await db.rollback()
+        print(f"Failed to create summary for truth {truth_id}: {e}")
         return None

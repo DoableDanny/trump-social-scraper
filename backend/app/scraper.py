@@ -1,7 +1,9 @@
 import asyncio
 from datetime import datetime
 from typing import Optional
-from .crud import create_truth, get_latest_external_id
+
+from .ai import generate_summary
+from .crud import create_summary, create_truth, format_truth, get_latest_external_id
 from .sse import push_event
 from sqlalchemy.ext.asyncio import AsyncSession
 from playwright.async_api import async_playwright
@@ -87,8 +89,22 @@ async def scraper_task(db: AsyncSession):
         print(new_truths)
         for truth in reversed(new_truths):
             try:
-                await create_truth(db, truth)
-                await push_event(truth)
+                db_truth = await create_truth(db, truth)
+                if db_truth:
+                    db_summary = await generate_and_save_summary(db, db_truth)
+                    formatted = format_truth(db_truth)
+                    formatted["ai_summary"] = db_summary.summary if db_summary else ""
+                    await push_event(formatted)
             except Exception as e:
                 print("Skipping duplicate or failed truth:", e)
         await asyncio.sleep(30)
+
+
+async def generate_and_save_summary(db, truth):
+    print("CONTENT: " + truth.content)
+    ai_summary = await generate_summary(truth.content)
+    db_summary = None
+    if ai_summary:
+        print(f"Creating summary in db for truth {truth.id}")
+        db_summary = await create_summary(db, truth.id, ai_summary)
+    return db_summary

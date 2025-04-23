@@ -1,7 +1,9 @@
-from sqlalchemy import BigInteger, Column, Integer, String, DateTime
+from sqlalchemy import BigInteger, Column, Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.sql import func
 from .database import Base
+
+from sqlalchemy.orm import relationship
 
 
 class Truth(Base):
@@ -12,3 +14,14 @@ class Truth(Base):
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
     url = Column(String, unique=True, nullable=False)
     media_attachments = Column(JSONB, nullable=True)
+
+
+class TruthSummary(Base):
+    __tablename__ = "truth_summaries"
+    id = Column(Integer, primary_key=True, index=True)
+    truth_id = Column(
+        Integer, ForeignKey("truths.id", ondelete="CASCADE"), nullable=False
+    )
+    summary = Column(Text, nullable=False)
+
+    truth = relationship("Truth", backref="summary")

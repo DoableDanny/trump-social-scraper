@@ -6,6 +6,8 @@ export const Truths = () => {
   const { data, loading, error } = useTruths();
   let lastDate: string | null = null;
 
+  console.log("Truths", data);
+
   if (loading) return <div>Loading...</div>;
   if (error instanceof Error) return <div>Error: {error.message}</div>;
 

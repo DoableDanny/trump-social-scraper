@@ -3,6 +3,8 @@ from fastapi import Depends, FastAPI
 from contextlib import asynccontextmanager
 from playwright.async_api import async_playwright
 from fastapi.middleware.cors import CORSMiddleware
+
+from .ai import generate_summary
 from .sse import sse_endpoint
 from .scraper import scraper_task
 from .database import get_db, engine, Base
@@ -45,6 +47,8 @@ def root():
     return {"message": "Hello from FastAPI"}
 
 
+# TODO: add url param ?inc_summary
+# if so, join the ai_summary
 @app.get("/truths")
 async def get_truths(db: AsyncSession = Depends(get_db)):
     return await get_latest_truths(db)
@@ -59,6 +63,16 @@ async def stream():
 async def latest_truth(db: AsyncSession = Depends(get_db)):
     truth = await get_latest_external_id(db)
     return truth
+
+
+@app.get("/test-ai")
+async def test_ai():
+    summary = await generate_summary(
+        "A great new book by Dana Perino, a FoxNews Star and very good person, is called, “I Wish Someone Had Told Me…” The title says it all. Much to be learned about life and success. Get it NOW!!!"
+    )
+    print("AI SUMMARY:")
+    print(summary)
+    return summary
 
 
 @app.get("/test-playwright")
