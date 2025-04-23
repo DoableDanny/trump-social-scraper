@@ -1,11 +1,13 @@
 import { useCallback } from "react";
 import { useFetch } from "./useFetch";
 import { useStream } from "./useStream";
-import { Truth } from "../components/Truths/Truths";
+import { Truth } from "../components/Truths/Truth";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const useTruths = () => {
   const { data, setData, error, loading } = useFetch<Truth>(
-    "http://localhost:8000/truths"
+    `${API_URL}/truths`
   );
 
   const handleNewTruth = useCallback(
@@ -18,7 +20,7 @@ export const useTruths = () => {
     [setData]
   );
 
-  useStream<Truth>("http://localhost:8000/stream", handleNewTruth);
+  useStream<Truth>(`${API_URL}/stream`, handleNewTruth);
 
   return { data, error, loading };
 };
