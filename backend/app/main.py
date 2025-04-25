@@ -38,7 +38,10 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # or ["*"] for dev, to allow all
+    allow_origins=[
+        "http://localhost:5173",
+        "https://trump-social-scraper.netlify.app/",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
