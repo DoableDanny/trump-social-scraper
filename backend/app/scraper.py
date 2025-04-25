@@ -73,13 +73,8 @@ async def fetch_new_truths(since_id: Optional[int] = None):
         return []
 
 
-# What should this do?
-# This runs in the background.
-# Initially, it fetches the first 20 posts from API.
-# After that, it fetches later posts from the API.
-# The user sees latest 20 posts by hitting /truths
-# They can then stream new posts hitting /stream
 async def scraper_task(db: AsyncSession):
+    """Background task that continuously fetches and processes new truths."""
     while True:
         since_id = await get_latest_external_id(db)
         print("Since this id:")
