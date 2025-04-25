@@ -10,6 +10,9 @@ async def event_generator():
     queue = asyncio.Queue()
     subscribers.add(queue)
     try:
+        # Send an initial heartbeat event immediately after connection
+        yield "event: heartbeat\ndata: connected\n\n"
+
         while True:
             data = await queue.get()
             json_data = json.dumps(data, default=str)
