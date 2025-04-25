@@ -28,7 +28,7 @@ docker compose -f docker-compose.dev.yml up --build
 | --------------------------- | ------------------------------------------------------------------------------------ |
 | Stop and remove all         | `docker compose down -v`                                                             |
 | Freeze Python packages      | `pip freeze > requirements.txt`                                                      |
-| Connect to Postgres locally | `psql -h 127.0.0.1 -p 5432 -U postgres`                                              |
+| Connect to Postgres locally | `psql -h 127.0.0.1 -p 5433 -U postgres`                                              |
 | Connect inside Docker db    | `docker exec -it trump-social-scraper-db-1 psql -U postgres -d trump_social_scraper` |
 
 ---

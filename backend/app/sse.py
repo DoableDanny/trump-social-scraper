@@ -28,4 +28,12 @@ async def push_event(data):
 
 
 async def sse_endpoint():
-    return StreamingResponse(event_generator(), media_type="text/event-stream")
+    response = StreamingResponse(event_generator(), media_type="text/event-stream")
+    response.headers["Access-Control-Allow-Origin"] = (
+        "https://trump-social-scraper.netlify.app"
+    )
+    response.headers["Cache-Control"] = "no-cache"
+    response.headers["X-Accel-Buffering"] = (
+        "no"  # Disable buffering for nginx if you're behind nginx
+    )
+    return response

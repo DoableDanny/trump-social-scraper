@@ -40,7 +40,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://trump-social-scraper.netlify.app/",
+        "https://trump-social-scraper.netlify.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
