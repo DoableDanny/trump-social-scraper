@@ -90,7 +90,8 @@ React frontend can be deployed to Netlify.
 Whenever you push new updates to GitHub:
 
 1. SSH into your server
-2. Run the deploy script:
+2. Check `git status`. If there are any tracked file changes on server, `git restore <file_name>` to get make them same as remote, so can safely `git pull` without merge conflicts (untracked server files are fine).
+3. Run the deploy script:
 
 ```bash
 ./deploy.sh
