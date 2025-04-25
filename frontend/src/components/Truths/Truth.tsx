@@ -62,23 +62,9 @@ export const Truth = ({ truth }: Props) => {
   const hasNoContent = textOnly.length === 0;
 
   return (
-    <li
-      style={{
-        padding: 20,
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "start" }}>
-        <div
-          style={{
-            marginRight: 20,
-            whiteSpace: "nowrap",
-            color: "rgb(196,199,205)",
-          }}
-        >
-          {formatTime(truth.timestamp)}
-        </div>
+    <li className={styles.truthItem}>
+      <div className={styles.truthContentWrapper}>
+        <div className={styles.timestamp}>{formatTime(truth.timestamp)}</div>
         <div>
           <div className={styles.content}>
             {hasNoContent ? (
@@ -94,7 +80,7 @@ export const Truth = ({ truth }: Props) => {
             )}
           </div>
           {truth.ai_summary !== "" && (
-            <div style={{ marginTop: 10, color: "gray" }}>
+            <div className={styles.aiSummary}>
               AI summary: {DOMPurify.sanitize(truth.ai_summary)}
             </div>
           )}
@@ -103,14 +89,7 @@ export const Truth = ({ truth }: Props) => {
       {!hasNoContent && needsTruncate && (
         <button
           onClick={() => setExpanded((prev) => !prev)}
-          style={{
-            marginLeft: 20,
-            cursor: "pointer",
-            background: "none",
-            border: "none",
-            color: "rgb(196,199,205)",
-            padding: 0,
-          }}
+          className={styles.expandButton}
         >
           {expanded ? "▲" : "▼"}
         </button>

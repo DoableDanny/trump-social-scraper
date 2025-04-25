@@ -5,3 +5,78 @@
 .content a {
   color: rgb(196, 199, 205);
 }
+
+/* Container around all truths */
+.truthsContainer {
+  background-color: rgb(8, 11, 17);
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+/* List of truths */
+.truthsList {
+  list-style: none;
+  padding: 0;
+  max-width: 1000px;
+}
+
+/* Date headers (e.g. "April 25, 2025") */
+.dateHeader {
+  font-weight: bold;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  color: rgb(115, 134, 170);
+}
+
+/* Wrapper around each truth */
+.truthItemWrapper {
+  border-left: 1px solid gray;
+  border-right: 1px solid gray;
+  border-bottom: 1px solid gray;
+}
+
+.withTopBorder {
+  border-top: 1px solid gray;
+}
+
+/* Single truth item */
+.truthItem {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Left side inside a truth */
+.truthContentWrapper {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Timestamp */
+.timestamp {
+  margin-right: 20px;
+  white-space: nowrap;
+  color: rgb(196, 199, 205);
+}
+
+/* The main content text */
+.content {
+  color: rgb(220, 220, 220);
+}
+
+/* AI summary under the content */
+.aiSummary {
+  margin-top: 10px;
+  color: gray;
+}
+
+/* Expand/collapse button */
+.expandButton {
+  margin-left: 20px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: rgb(196, 199, 205);
+  padding: 0;
+}
