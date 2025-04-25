@@ -12,4 +12,7 @@ docker compose -f docker-compose.prod.yml stop backend
 echo "⬆️ Starting new backend container..."
 docker compose -f docker-compose.prod.yml up -d backend
 
-echo "✅ Zero downtime deployment complete!"
+echo "🌐 Restarting nginx to refresh reverse proxy..."
+docker compose -f docker-compose.prod.yml restart nginx
+
+echo "✅ Deployment complete! Visit your site to confirm it's running."
